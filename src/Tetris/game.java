@@ -42,7 +42,7 @@ public class game implements Runnable, WindowListener {
 		System.out.println("Starting.....");
 		
 	      long lastTime = System.nanoTime();
-	      final double amountOfTicks = 2.0;
+	      final double amountOfTicks = 16.0;
 	      double ns = 1000000000 / amountOfTicks;
 	      double delta = 0;
 	      int frames = 0;

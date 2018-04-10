@@ -71,7 +71,7 @@ public class render extends JComponent{
 		g.setColor(Color.black);
 		g.drawString("© Philipp Kitzmüller", flänge-120, fbreite-10);
 		
-		//nächstes objekt feld
+		//nächster Cube feld
 		g.setColor(Color.white);
 		g.fillRect(flänge-100, 80, 60, 60);
 		g.setColor(Color.black);
