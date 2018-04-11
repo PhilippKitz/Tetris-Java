@@ -13,27 +13,24 @@ public class running {
 	keyinput key;
 	
 	
-	boolean left= true, right=true, down;
-	public void abfragen(int x,int y){
-		if(x == 0){
-			left = false;
+	boolean left= true, right=true, down = true;
+
+	
+	
+	boolean GameField(int x, int y){
+		if(feld[x][y] == 0){
+			return false;
+		}else{
+			return true;
 		}
-		if(x == spalten-1){
-			right = false;
-		}
-		if(x > spalten-1){
-			this.x--;
-		}
-		if(x < 0){
-			this.x++;
-		}
+		
 	}
 	
-	public running(int spalten, int reihen, int raster){
+	public running(keyinput key,int spalten, int reihen, int raster){
 		this.spalten = spalten;
 		this.reihen  = reihen;
 		this.raster  = raster;
-
+		this.key = key;
 		
 		feld = new int[spalten][reihen];
 		
@@ -55,14 +52,40 @@ public class running {
 	int tickteiler =  0;
 	public void tick(){
 		
+		
+
+		
 		if(tickteiler == 0){
-			y++;tickteiler++;
+			move(0,1);
+			tickteiler++;
+			
 		}else if(tickteiler >= 7){
 			tickteiler = 0;
 		}else{
 			tickteiler++;
 		}
 		
+		if(key.nextCube){
+			nextCube();
+		}
+		if(key.rotate){
+			rotate();
+		}
+		if(key.mleft){
+			move(-1,0);
+		}
+		if(key.mright){
+			move(1,0);
+		}
+		if(key.mdown && y <= reihen-2){
+			move(0,1);
+		}
+		
+		key.nextCube = false;
+		key.rotate = false;
+		key.mleft = false;
+		key.mright = false;
+		key.mdown = false;
 	}
 	
 	objekte nextObj = objekte.L; ///enum
@@ -94,17 +117,53 @@ public class running {
 		cube = rotateCube(cube);
 	}
 	
-	public void move(int x,int y){
+	int wait= 0;
+	public void move(int x,int y){	
 		
+		for(int s = 0; s < cube.length; s++){
+			int tx =this.x+cube[s][0];
+			int ty =this.y+cube[s][1];
+			
+			if(tx > spalten-1  ){
+				this.x--;
+			}
+			if(tx < 0){
+				this.x++;
+			}
+			
+			if(tx == 0 || GameField(tx-1,ty)){
+				left = false;
+			}
+			System.out.println("vor if " + tx);
+			if(tx == spalten-1 || GameField(tx+1,ty)){
+				right = false;
+				System.out.println("in if " + tx);
+			}
+			
+			if(ty==reihen-1 || GameField(tx,ty+1)){
+				down = false;
+				if(wait == 4){
+					einschreiben();
+					wait=0;
+				}else{
+					wait++;
+				}							
+			}else{
+				down = true;
+			}
+		}
 		
 		if(left && x < 0){
 			this.x = this.x + x;
-		}
+		}			
 		if(right && x > 0){
 			this.x = this.x + x;
+		}			
+		if(down){
+				this.y = this.y + y;
 		}
 		
-		this.y = this.y + y;
+		left = true; right = true;  
 	}
 	
 	public int[][] setnextCube(int c){ //nextcube wird gewählt
@@ -156,13 +215,11 @@ public class running {
 		return rotatetCube;
 	}
 	
-
-	
 	public void render(Graphics g){
-		left = true; right = true;
+		
 		//render objekt		
 		for(int s = 0; s < cube.length; s++){
-			abfragen(x+cube[s][0],y+cube[s][1]);
+			
 			g.setColor(Obj.farbe);
 			g.fillRect(raster*(x+cube[s][0]), raster*(y+cube[s][1]), raster, raster);
 			g.setColor(Color.BLACK);
@@ -182,7 +239,16 @@ public class running {
 		for(int s= 0; s < spalten; s++){
 			for(int r= 0; r < reihen; r++){
 				
-				if(feld[s][r] == 1){
+				if(feld[s][r] >= 1){
+					
+					if(feld[s][r] == objekte.T.Number){g.setColor(objekte.T.farbe);}
+					if(feld[s][r] == objekte.L.Number){g.setColor(objekte.L.farbe);}
+					if(feld[s][r] == objekte.Z.Number){g.setColor(objekte.Z.farbe);}
+					if(feld[s][r] == objekte.W.Number){g.setColor(objekte.W.farbe);}
+					if(feld[s][r] == objekte.I.Number){g.setColor(objekte.I.farbe);}
+					g.fillRect(raster*s,raster*r,raster,raster);
+					
+					g.setColor(Color.BLACK);;
 					g.drawRect(raster*s,raster*r,raster,raster);
 				}
 			}
@@ -192,8 +258,10 @@ public class running {
 	
 	private void einschreiben(){
 		for(int s = 0; s < cube.length; s++){
-			feld[cube[s][0]+x][cube[s][1]+y] = 1;
+			feld[cube[s][0]+x][cube[s][1]+y] = Obj.Number;
 		}
+		nextCube();
+
 	}
 	
 	

@@ -3,11 +3,11 @@ package Tetris;
 import java.awt.Color;
 
 public enum objekte {
-	L(true,Color.BLUE),	
-	T(true,Color.YELLOW),
-	Z(true,Color.ORANGE),
-	W(false,Color.GREEN),
-	I(true,Color.RED),
+	L(true,Color.BLUE, 1),	
+	T(true,Color.YELLOW, 2),
+	Z(true,Color.ORANGE, 3),
+	W(false,Color.GREEN, 4),
+	I(true,Color.RED, 5),
 	;
 	
 	
@@ -19,10 +19,11 @@ public enum objekte {
 	public static int[][] CW =  {{0,0},{0,1},{1,0},{1,1}};
 	public static int[][] CI =  {{0,0},{-1,0},{1,0},{2,0}};
 	
-	boolean rotation; Color farbe;
-	private objekte(boolean rotation, Color farbe){
+	boolean rotation; Color farbe; int Number;
+	private objekte(boolean rotation, Color farbe, int num){
 		this.rotation = rotation;
 		this.farbe = farbe;
+		this.Number = num;
 	}
 	
 }
