@@ -50,11 +50,9 @@ public class running {
 	
 	int x = 6,y = 1;
 	int tickteiler =  0;
+	
 	public void tick(){
-		
-		
-
-		
+			
 		if(tickteiler == 0){
 			move(0,1);
 			tickteiler++;
@@ -81,11 +79,6 @@ public class running {
 			move(0,1);
 		}
 		
-		key.nextCube = false;
-		key.rotate = false;
-		key.mleft = false;
-		key.mright = false;
-		key.mdown = false;
 	}
 	
 	objekte nextObj = objekte.L; ///enum
@@ -117,6 +110,15 @@ public class running {
 		cube = rotateCube(cube);
 	}
 	
+	
+	private void einschreiben(){
+		for(int s = 0; s < cube.length; s++){
+			feld[cube[s][0]+x][cube[s][1]+y] = Obj.Number;
+		}
+		nextCube();
+
+	}
+	
 	int wait= 0;
 	public void move(int x,int y){	
 		
@@ -125,10 +127,10 @@ public class running {
 			int ty =this.y+cube[s][1];
 			
 			if(tx > spalten-1  ){
-				this.x--;
+				this.x--; return;
 			}
 			if(tx < 0){
-				this.x++;
+				this.x++;return;
 			}
 			
 			if(tx == 0 || GameField(tx-1,ty)){
@@ -256,13 +258,7 @@ public class running {
 		
 	}
 	
-	private void einschreiben(){
-		for(int s = 0; s < cube.length; s++){
-			feld[cube[s][0]+x][cube[s][1]+y] = Obj.Number;
-		}
-		nextCube();
 
-	}
 	
 	
 }

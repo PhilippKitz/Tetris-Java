@@ -41,7 +41,7 @@ public class game implements Runnable, WindowListener {
 	
 	public void run() {
 		System.out.println("Starting.....");
-		 r.tick();
+
 	      long lastTime = System.nanoTime();
 	      final double amountOfTicks = 16.0;
 	      double ns = 1000000000 / amountOfTicks;
@@ -58,9 +58,9 @@ public class game implements Runnable, WindowListener {
 	             delta--;
 	             frames++;
 	             
-	             
+	             r.tick();	             
 	             draw.repaint();
-	             r.tick();	             	             
+             	             
 	          }
 		          
 	          if (System.currentTimeMillis() - timer > 1000) {
