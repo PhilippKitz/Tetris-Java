@@ -3,6 +3,7 @@ package Tetris;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.util.Random;
+import javax.swing.JOptionPane;
 
 
 
@@ -11,14 +12,25 @@ public class running {
 	int spalten, reihen, raster;
 	int[][] feld;
 	keyinput key;
-	int Score= 0;
-
+	int Score;
 	
-	public running(keyinput key,int spalten, int reihen, int raster){
+	
+	
+	Random r = new Random();
+	
+	public running(keyinput key,int spalten, int reihen, int raster, int seed){
 		this.spalten = spalten;
 		this.reihen  = reihen;
 		this.raster  = raster;
 		this.key = key;
+		
+		if(seed == 0){
+			System.out.println("noSeed");
+		}else{
+			System.out.println("Seed würde gesetzt auf: "+ seed);
+			r.setSeed(seed);
+		}
+		
 		
 		feld = newGameField(reihen,spalten);
 
@@ -27,51 +39,67 @@ public class running {
 		nextCube();
 	}
 	
-
+	
 
 	int obj_anzahl = 7;
 	
+	
 	int x = 6,y = 1;
+	
 	int tickteiler =  0;
+	int teilung = 7;
+	
+	boolean running=true;
 	
 	public void tick(){
-			
-		if(tickteiler == 0){
-			Move(false,false,true);
-			tickteiler++;
-			
-		}else if(tickteiler >= 7){
-			tickteiler = 0;
-		}else{
-			tickteiler++;
-		}
 		
-		if(key.nextCube){
-			nextCube();
+		if(running){
+			if(Score == 500){
+				teilung = 6;
+			}else if(Score == 1000){
+				teilung = 4;
+			}else if(Score == 2100){
+				teilung = 2;
+			}else if(Score == 3500){
+				teilung = 1;
+			}
+			
+			if(tickteiler == 0){
+				Move(false,false,true);
+				tickteiler++;
+				
+			}else if(tickteiler >= teilung){
+				tickteiler = 0;
+			}else{
+				tickteiler++;
+			}
+			
+			if(key.nextCube){
+				nextCube();
+			}
+			if(key.rotate){
+				rotate();
+				key.rotate = false;
+			}
+			
+			Move(key.mleft,key.mright,key.mdown);
+	
+			if(key.mdown){
+				Score++;
+			}
+			FieldTest();
 		}
-		if(key.rotate){
-			rotate();
-			key.rotate = false;
-		}
-		
-		Move(key.mleft,key.mright,key.mdown);
-
-		if(key.mdown){
-			Score++;
-		}
-		FieldTest();
 	}
 	
 	objekte nextObj = objekte.L1; ///enum
 	objekte Obj = objekte.L1; ///enum
 	
-	Random r = new Random();
+	
 	int[][] cube ,nextCube;	
 	int lCube, bCube;
 	
 	
 	public void firstCube(){
-		
 		int r = this.r.nextInt(obj_anzahl);
 		
 		nextCube = setnextCube(r);
@@ -84,8 +112,14 @@ public class running {
 		cube = nextCube;
 		Obj = nextObj;
 		int r = this.r.nextInt(obj_anzahl);	
-		nextCube = setnextCube(r);		
-	}
+		nextCube = setnextCube(r);	
+		
+		for(int i=0; i < cube.length; i++)	//gameover abfrage
+			if(GameField(x+cube[i][0],y+cube[i][1])){ 
+		    	GameOver();
+			}
+			
+		}
 	
 	//Controlling
 	public void rotate(){
@@ -223,13 +257,13 @@ public class running {
 					voll[r] = false;
 				}
 			}
-			System.out.println("reihevoll: "+r+" " + voll[r] );
+			
 		}
 		
 		int newReihe = reihen;
 		for(int r=reihen-1; r >= 0; r--){			
 			
-			System.out.println(voll[r]);	
+			
 			if(voll[r]){
 				System.out.println("voll");
 				AnzahlReihen++;
@@ -238,7 +272,7 @@ public class running {
 				newReihe--;
 			}
 			
-			System.out.println("alteReihe: "+r+" neueReihe: " + newReihe + " reihevoll: " + voll[r] );
+//			System.out.println("alteReihe: "+r+" neueReihe: " + newReihe + " reihevoll: " + voll[r] );
 			for(int s=0; s < spalten; s++){
 				newField[s][newReihe]= feld[s][r];
 			}
@@ -283,6 +317,19 @@ public class running {
 		}
 		
 		return cube;
+	}
+	
+	public void GameOver(){
+		running = false;
+		JOptionPane.showMessageDialog(null,
+			    "Dein Score: "+ Score);
+		reset();		
+	}
+	
+	public void reset(){
+		feld = newGameField(reihen, spalten);
+		Score = 2000;
+		running = true;
 	}
 	
 	

@@ -7,17 +7,28 @@ import javax.swing.*;
 
 public class game implements Runnable, WindowListener {
 	
+	JFrame menu;
+	
+	public game(JFrame menu){
+		this.menu = menu;
+	}
+
+
 	int flänge = 400, fbreite = 400,raster = 20;
 	/////////////////////////////////////////
 	
 	render draw;	
-	keyinput key = new keyinput();
-	running r = new running(key,(flänge-140)/raster, fbreite/raster,raster);
+	keyinput key;
+	int seed = 0;
+	running r;
 
 	///////////////////////////////////////// Frame
 	
-	public void startGame(){
+	public void startGame(int seed){
+		key = new keyinput();
+		r = new running(key,(flänge-140)/raster, fbreite/raster,raster, seed);	
 		draw = new render(flänge, fbreite,raster,r);
+		
 		
 		JFrame frame = new JFrame();
 		frame.setSize(flänge+6, fbreite+29);
@@ -26,11 +37,13 @@ public class game implements Runnable, WindowListener {
 		frame.addKeyListener(key);		
 		frame.add(draw);
 		frame.setVisible(true);
+		frame.setLocationRelativeTo(null);
 		
 		start();
 		
 		System.out.println(draw.getSize());
 	}
+	
 	
 	///////////////////////////////////////// running // fps // ...	
 	
@@ -94,6 +107,7 @@ public class game implements Runnable, WindowListener {
 	
 	public void windowActivated(WindowEvent e) {
 		System.out.println("[WindowsListener] Fenster ist Aktiv");
+		r.reset();
 	}
 
 	
@@ -103,9 +117,11 @@ public class game implements Runnable, WindowListener {
 
 	
 	public void windowClosing(WindowEvent e) {
-		System.out.println("[WindowsListener] Fenster würde geschlossen");
-		stop();
-		System.exit(0);
+			System.out.println("[WindowsListener] Game Fenster würde geschlossen");
+			running = false;
+			
+			menu.setVisible(true);
+			stop();
 	}
 
 	
