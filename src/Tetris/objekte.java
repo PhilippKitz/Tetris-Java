@@ -3,11 +3,13 @@ package Tetris;
 import java.awt.Color;
 
 public enum objekte {
-	L(true,Color.BLUE, 1),	
-	T(true,Color.YELLOW, 2),
-	Z(true,Color.ORANGE, 3),
-	W(false,Color.GREEN, 4),
-	I(true,Color.RED, 5),
+	L1(true,Color.BLUE, 1),
+	L2(true,Color.ORANGE, 2),	
+	T(true,Color.PINK, 3),
+	Z1(true,Color.RED, 4),
+	Z2(true,Color.GREEN, 5),
+	W(false,Color.YELLOW, 6),
+	I(true,Color.CYAN, 7),
 	;
 	
 	

@@ -20,17 +20,8 @@ public class running {
 		this.raster  = raster;
 		this.key = key;
 		
-		feld = new int[spalten][reihen];
-		
-		for(int s= 0; s < spalten; s++){
-			System.out.print(s + " ");
-			for(int r= 0; r < reihen; r++){
-				
-				feld[s][r] = 0;
-				//System.out.print(feld[s][r] + " ");
-			}
-			
-		}
+		feld = newGameField(reihen,spalten);
+
 		
 		firstCube();
 		nextCube();
@@ -68,11 +59,11 @@ public class running {
 		if(key.mdown){
 			Score++;
 		}
-		
+		FieldTest();
 	}
 	
-	objekte nextObj = objekte.L; ///enum
-	objekte Obj = objekte.L; ///enum
+	objekte nextObj = objekte.L1; ///enum
+	objekte Obj = objekte.L1; ///enum
 	
 	Random r = new Random();
 	int[][] cube ,nextCube;	
@@ -208,25 +199,53 @@ public class running {
 	
 	
 	
-	public void reset(){
+	public int[][] newGameField(int reihen, int spalten){
+		int gameField[][] = new int[spalten][reihen];
 		for(int s= 0; s < spalten; s++){
-			System.out.print(s + " ");
 			for(int r= 0; r < reihen; r++){
 				
-				feld[s][r] = 0;
+				gameField[s][r] = 0;
 				//System.out.print(feld[s][r] + " ");
-			}
-			
+			}			
 		}
+		return gameField;
 	}
 	
 	public void FieldTest(){
-		int[][] newField;
-		for(int s=0; s < spalten; s++){
-			for(int r=0; r < reihen; r++){
-				
+		int[][] newField = newGameField(reihen,spalten);	
+		boolean[] voll = new boolean[reihen];
+		int AnzahlReihen = 0;
+		for(int r=0; r < reihen; r++){
+			
+			voll[r] = true;
+			for(int s=0; s < spalten; s++){
+				if(feld[s][r] == 0){
+					voll[r] = false;
+				}
 			}
+			System.out.println("reihevoll: "+r+" " + voll[r] );
 		}
+		
+		int newReihe = reihen;
+		for(int r=reihen-1; r >= 0; r--){			
+			
+			System.out.println(voll[r]);	
+			if(voll[r]){
+				System.out.println("voll");
+				AnzahlReihen++;
+				continue;
+			}else{
+				newReihe--;
+			}
+			
+			System.out.println("alteReihe: "+r+" neueReihe: " + newReihe + " reihevoll: " + voll[r] );
+			for(int s=0; s < spalten; s++){
+				newField[s][newReihe]= feld[s][r];
+			}
+			
+		}
+		feld = newField;
+		Score = Score + AnzahlReihen*100; 
 	}
 
 	//cube veränderungen
@@ -234,19 +253,19 @@ public class running {
 		int[][] cube = null;
 		switch(c){
 		case 0:////////////////////////L1
-			nextObj = objekte.L;
+			nextObj = objekte.L1;
 			cube = objekte.CL1;			
 			break;
 		case 1:////////////////////////L2
-			nextObj = objekte.L;
+			nextObj = objekte.L2;
 			cube = objekte.CL2; 			
 			break;
 		case 2:////////////////////////Z1
-			nextObj = objekte.Z;
+			nextObj = objekte.Z1;
 			cube = objekte.CZ1;
 			break;
 		case 3:////////////////////////Z2
-			nextObj = objekte.Z;
+			nextObj = objekte.Z2;
 			cube = objekte.CZ2;
 			break;
 		case 4:////////////////////////T
@@ -310,8 +329,10 @@ public class running {
 				if(feld[s][r] >= 1){
 					
 					if(feld[s][r] == objekte.T.Number){g.setColor(objekte.T.farbe);}
-					if(feld[s][r] == objekte.L.Number){g.setColor(objekte.L.farbe);}
-					if(feld[s][r] == objekte.Z.Number){g.setColor(objekte.Z.farbe);}
+					if(feld[s][r] == objekte.L1.Number){g.setColor(objekte.L1.farbe);}
+					if(feld[s][r] == objekte.L2.Number){g.setColor(objekte.L2.farbe);}
+					if(feld[s][r] == objekte.Z1.Number){g.setColor(objekte.Z1.farbe);}
+					if(feld[s][r] == objekte.Z2.Number){g.setColor(objekte.Z2.farbe);}
 					if(feld[s][r] == objekte.W.Number){g.setColor(objekte.W.farbe);}
 					if(feld[s][r] == objekte.I.Number){g.setColor(objekte.I.farbe);}
 					g.fillRect(raster*s,raster*r,raster,raster);
