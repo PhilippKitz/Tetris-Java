@@ -16,9 +16,6 @@ public class keyinput implements KeyListener {
 		
 		if (key == KeyEvent.VK_O) { 
 			nextCube = true;
-		 }
-		if (key == KeyEvent.VK_W) { 
-			rotate = true;
 		 }	
 		if (key == KeyEvent.VK_A) { 
 			mleft = true;
@@ -39,8 +36,10 @@ public class keyinput implements KeyListener {
 			nextCube = false;
 		 }
 		if (key == KeyEvent.VK_W) { 
-			rotate = false;
-		 }	
+			rotate = true;
+		 }else{
+			 rotate = false; 
+		 }
 		if (key == KeyEvent.VK_A) { 
 			mleft = false;
 		 }
@@ -53,9 +52,6 @@ public class keyinput implements KeyListener {
 	}
 
 
-	public void keyTyped(KeyEvent e) {
-	
-		
-	}
+	public void keyTyped(KeyEvent e) {}
 
 }

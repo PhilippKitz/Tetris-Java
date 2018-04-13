@@ -11,20 +11,8 @@ public class running {
 	int spalten, reihen, raster;
 	int[][] feld;
 	keyinput key;
-	
-	
-	boolean left= true, right=true, down = true;
+	int Score= 0;
 
-	
-	
-	boolean GameField(int x, int y){
-		if(feld[x][y] == 0){
-			return false;
-		}else{
-			return true;
-		}
-		
-	}
 	
 	public running(keyinput key,int spalten, int reihen, int raster){
 		this.spalten = spalten;
@@ -35,9 +23,13 @@ public class running {
 		feld = new int[spalten][reihen];
 		
 		for(int s= 0; s < spalten; s++){
+			System.out.print(s + " ");
 			for(int r= 0; r < reihen; r++){
+				
 				feld[s][r] = 0;
+				//System.out.print(feld[s][r] + " ");
 			}
+			
 		}
 		
 		firstCube();
@@ -54,7 +46,7 @@ public class running {
 	public void tick(){
 			
 		if(tickteiler == 0){
-			move(0,1);
+			Move(false,false,true);
 			tickteiler++;
 			
 		}else if(tickteiler >= 7){
@@ -68,15 +60,13 @@ public class running {
 		}
 		if(key.rotate){
 			rotate();
+			key.rotate = false;
 		}
-		if(key.mleft){
-			move(-1,0);
-		}
-		if(key.mright){
-			move(1,0);
-		}
-		if(key.mdown && y <= reihen-2){
-			move(0,1);
+		
+		Move(key.mleft,key.mright,key.mdown);
+
+		if(key.mdown){
+			Score++;
 		}
 		
 	}
@@ -106,68 +96,140 @@ public class running {
 		nextCube = setnextCube(r);		
 	}
 	
+	//Controlling
 	public void rotate(){
+		int[][] oldCube = cube;
 		cube = rotateCube(cube);
+		
+		for(int i= 0; i < cube.length; i++){
+			int tx = x+cube[i][0], ty = y+cube[i][1];
+			
+			if(tx < 0){
+				x= x+1;
+			}
+			if(ty < 0){
+				y= y+1;
+			}	
+			if(tx > spalten-1){
+				x= x-1;
+			}
+			if(ty > reihen-1){
+				y= y-1;
+			}
+			
+			if(GameField(tx,ty)){
+				cube = oldCube;
+				System.out.println("Rotation nicht möglich");
+			}
+		}
+	}
+	
+	int wait = 0;
+	public void Move(boolean left, boolean right, boolean down){
+		for(int i = 0; i < cube.length;i++){
+			int tx = x+cube[i][0], ty = y+cube[i][1];
+			if(GameField(tx-1,ty) || tx-1 <0 ){
+				left = false;
+			}
+			if(GameField(tx+1,ty) || tx+1 > spalten-1){
+				right = false;
+			}
+			if(ty == reihen-1 || GameField(tx,ty+1)){				
+				down = false;
+				if(wait == 10){
+					einschreiben();
+					wait=0;
+					return;					
+				}else{
+					wait++;
+				}
+			}
+		}
+		
+		if(left && x > 0){
+			this.x --;
+		}
+		if(right && x < spalten-1){
+			this.x ++;
+		}
+		if(down && y < reihen-1){
+			this.y ++;
+		}
 	}
 	
 	
-	private void einschreiben(){
+	public void moveDown(){
+		this.y ++;
+	}
+	
+	public void moveLeft(){
+		this.x --;
+	}
+	
+	public void moveRight(){
+		this.x ++;
+	}
+	
+
+	
+	
+	//game field
+	boolean GameField(int x, int y){
+		
+		if(x < 0){
+			x = 0;
+		}
+		if(y < 0){
+			y = 0;
+		}
+		
+		if(x > spalten-1){
+			x = spalten-1;
+		}
+		if(y > reihen-1){
+			y = reihen-1;
+		}
+		
+		if(feld[x][y] == 0){
+			return false;
+		}else{
+			return true;
+		}
+		
+	}
+	
+
+	private void einschreiben(){	
 		for(int s = 0; s < cube.length; s++){
 			feld[cube[s][0]+x][cube[s][1]+y] = Obj.Number;
 		}
 		nextCube();
+	}
+	
+	
+	
+	public void reset(){
+		for(int s= 0; s < spalten; s++){
+			System.out.print(s + " ");
+			for(int r= 0; r < reihen; r++){
+				
+				feld[s][r] = 0;
+				//System.out.print(feld[s][r] + " ");
+			}
+			
+		}
+	}
+	
+	public void FieldTest(){
+		int[][] newField;
+		for(int s=0; s < spalten; s++){
+			for(int r=0; r < reihen; r++){
+				
+			}
+		}
+	}
 
-	}
-	
-	int wait= 0;
-	public void move(int x,int y){	
-		
-		for(int s = 0; s < cube.length; s++){
-			int tx =this.x+cube[s][0];
-			int ty =this.y+cube[s][1];
-			
-			if(tx > spalten-1  ){
-				this.x--; return;
-			}
-			if(tx < 0){
-				this.x++;return;
-			}
-			
-			if(tx == 0 || GameField(tx-1,ty)){
-				left = false;
-			}
-			System.out.println("vor if " + tx);
-			if(tx == spalten-1 || GameField(tx+1,ty)){
-				right = false;
-				System.out.println("in if " + tx);
-			}
-			
-			if(ty==reihen-1 || GameField(tx,ty+1)){
-				down = false;
-				if(wait == 4){
-					einschreiben();
-					wait=0;
-				}else{
-					wait++;
-				}							
-			}else{
-				down = true;
-			}
-		}
-		
-		if(left && x < 0){
-			this.x = this.x + x;
-		}			
-		if(right && x > 0){
-			this.x = this.x + x;
-		}			
-		if(down){
-				this.y = this.y + y;
-		}
-		
-		left = true; right = true;  
-	}
-	
+	//cube veränderungen
 	public int[][] setnextCube(int c){ //nextcube wird gewählt
 		int[][] cube = null;
 		switch(c){
@@ -216,8 +278,12 @@ public class running {
 		
 		return rotatetCube;
 	}
-	
+
+	//rendering 
 	public void render(Graphics g){
+		//text
+		g.setColor(Color.black);
+		g.drawString("Score: "+ Score, 280, 190);
 		
 		//render objekt		
 		for(int s = 0; s < cube.length; s++){
