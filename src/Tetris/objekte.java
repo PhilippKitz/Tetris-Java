@@ -4,8 +4,8 @@ import java.awt.Color;
 
 public enum objekte {
 	L1(true,Color.BLUE, 1),
-	L2(true,Color.ORANGE, 2),	
-	T(true,Color.PINK, 3),
+	L2(true,new Color(210, 105, 30), 2),	
+	T(true,new Color(153, 51, 153), 3),
 	Z1(true,Color.RED, 4),
 	Z2(true,Color.GREEN, 5),
 	W(false,Color.YELLOW, 6),
