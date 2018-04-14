@@ -35,29 +35,29 @@ public class menu implements ActionListener, WindowListener {
 		btnStart.setBounds(32, 59, 150, 30);
 		btnStart.addActionListener(this);
 		btnStart.setBackground(Color.WHITE);
-		f.add(btnStart);
+		f.getContentPane().add(btnStart);
 		
 		JLabel Logo = new JLabel("");
 		Logo.setLocation(0, 5);
 		Logo.setSize(214, 50);
 		Logo.setHorizontalAlignment(SwingConstants.CENTER);
 		Logo.setIcon(new ImageIcon(menu.class.getResource("/Tetris/tetris.png")));
-		f.add(Logo);
+		f.getContentPane().add(Logo);
 		
 		tfName = new JTextField("");
 		tfName.setToolTipText("Seed");
 		tfName.setBounds(32, 116, 150, 30);
-		f.add(tfName);
+		f.getContentPane().add(tfName);
 		
 		JLabel lblSeed = new JLabel("Seed:");
 		lblSeed.setBounds(32, 100, 150, 14);
-		f.add(lblSeed);
+		f.getContentPane().add(lblSeed);
 		
 		JLabel Copyright =new JLabel("\u00A9Philipp Kitzm\u00FCller");
 		Copyright.setVerticalAlignment(SwingConstants.BOTTOM);
 		Copyright.setForeground(SystemColor.controlShadow);
 		Copyright.setBounds(78, 157, 120, 15);
-		f.add(Copyright);
+		f.getContentPane().add(Copyright);
 		
 		
 		f.setVisible(true);
