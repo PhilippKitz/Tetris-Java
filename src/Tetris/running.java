@@ -47,20 +47,21 @@ public class running {
 	int x = 6,y = 1;
 	
 	int tickteiler =  0;
-	int teilung = 7;
+	int tickTeilungnorm = 7;
+	int teilung = tickTeilungnorm;
 	
 	boolean running=true;
 	
 	public void tick(){
 		
 		if(running){
-			if(Score == 500){
+			if(Score == 1200){
 				teilung = 6;
-			}else if(Score == 1000){
+			}else if(Score == 3000){
 				teilung = 4;
-			}else if(Score == 2100){
+			}else if(Score == 5500){
 				teilung = 2;
-			}else if(Score == 3500){
+			}else if(Score == 7000){
 				teilung = 1;
 			}
 			
@@ -279,7 +280,19 @@ public class running {
 			
 		}
 		feld = newField;
-		Score = Score + AnzahlReihen*100; 
+		Score = Score + AnzahlReihen*100;
+		
+		if(AnzahlReihen == 1){
+			Score = Score + 50;
+		}else if(AnzahlReihen == 2){
+			Score = Score + 100;
+		}else if(AnzahlReihen == 3){
+			Score = Score + 200;
+		}else if(AnzahlReihen == 4){
+			Score = Score + 400;
+		}else if(AnzahlReihen > 4){
+			Score = Score + 800;
+		}
 	}
 
 	//cube veränderungen
@@ -328,8 +341,9 @@ public class running {
 	
 	public void reset(){
 		feld = newGameField(reihen, spalten);
-		Score = 2000;
+		Score = 0;
 		running = true;
+		teilung = tickTeilungnorm;
 	}
 	
 	
